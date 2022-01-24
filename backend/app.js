@@ -1,7 +1,6 @@
 const express = require('express')
 const {User} = require('./db/models')
 const app = express()
-const port = 8080
 const asyncHandler = require('express-async-handler')
 let user = require('./db/models/user')
 const cors = require("cors")
@@ -11,9 +10,6 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 
-app.get('/', (req, res) => {
-  res.send('Hello World!')
-})
 
 
 // get all users
@@ -42,3 +38,5 @@ app.post('/user', asyncHandler(async (req, res, next) => {
 
 
 )
+
+module.exports = app
