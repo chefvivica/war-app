@@ -1,3 +1,4 @@
+//db config, sequelize connection
 const config = require('./index');
 const db = config.db;
 const username = db.username;
