@@ -1,6 +1,11 @@
 # how to start
 1. git clone
-2. make a database
+2. install
+-   npm install express
+-   npm install sequelize
+-   npm install pg
+-
+3. make a database
 -   psql
 -   create database war_app
 -   create user war with password '123'

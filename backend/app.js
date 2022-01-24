@@ -1,21 +1,44 @@
-const express = require('express');
-const routes = require('./routes');
-const app = express();
-const port = 9090
-const db = require('./db/models')
-app.use(routes);
+const express = require('express')
+const {User} = require('./db/models')
+const app = express()
+const port = 8080
+const asyncHandler = require('express-async-handler')
+let user = require('./db/models/user')
+const cors = require("cors")
+
+app.use(cors({}))
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+
+
+app.get('/', (req, res) => {
+  res.send('Hello World!')
+})
+
+
+// get all users
+app.get('/users', asyncHandler(async (req, res) => {
+  const users = await User.findAll()
+    return res.json(users)
+  })
+)
+
+
+// post new user when user enter a username
+app.post('/user', asyncHandler(async (req, res, next) => {
+    try {
+      let {username} = req.body
+      let winCount = 0
+      let lostCount = 0
+      user = User.create({ username, winCount, lostCount} )
+
+    } catch (error) {
+      console.log(error);
+      next(error)
+    }
+
+  })
 
 
 
-
-db.sequelize.authenticate()
-    .then(() => {
-        console.log('db connected. Sequelize is ready to use.')
-        app.listen(port, () => console.log(`listening ${port}`))
-    })
-    .catch((err) => {
-        console.log('db connection failed');
-        console.error(err);
-    })
-
-module.exports = app
+)
