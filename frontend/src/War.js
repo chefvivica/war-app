@@ -1,36 +1,41 @@
-import {  useState } from 'react';
+import { useState } from 'react';
 // import { useNavigate } from 'react-router-dom';
-import { Deck, Hand } from "./classContainer/Game";
+import { Game } from "./classContainer/Game";
 import Card from "./Card"
 function War({ formValue }) {
 
-    const deck = new Deck();
-    // const hand1 = new Hand();
-    // hand1.username = formValue
-    // const hand2 = new Hand();
-    // hand2.username = "bot"
+    const game = new Game();
 
-    // console.log("hand1", hand1, "hand2", hand2)
 
-    const [cards, setCards] = useState([])
 
-    function handleShuffleButton(){
-        deck.shuffle()
-        setCards(deck.cards)
+
+    const [userCards, setUserCards] = useState([])
+    const [botCards, setBotCards] = useState([])
+
+    function handleStartButton() {
+        game.startGame()
+        setUserCards(game.user.hand)
+        setBotCards(game.bot.hand)
+    }
+
+    function handlePlayButton() {
+
+
     }
 
     return (
         <>
-            <button onClick={handleShuffleButton}>
-                Shuffle
+            <button onClick={handleStartButton}>
+                Start Game
             </button>
+            {userCards?.map((card, index) => {
+                return (<span key={index} style={{ "margin": "4px" }}>
+                    {card.value}
+                </span>
+                )
+            })}
             <div>
-                <h3>Here are your cards</h3>
-                {cards.map((card,i)=>{
-                    return (
-                        <span key={`card${i}`}>{card}</span>
-                    )
-                })   }
+                <button>Next</button>
 
             </div>
         </>
