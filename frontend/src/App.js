@@ -7,6 +7,7 @@ import {
 import { useState } from 'react';
 import Start from './Start';
 import { War } from './War';
+import { GameOver } from './GameOver';
 import { Game } from './classContainer/Game';
 
 
@@ -19,12 +20,18 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route exact path="/" element={<Start formValue={formValue} setFormValue={setFormValue} />} />
+        <Route exact path="/" element={<Start
+          formValue={formValue}
+          setFormValue={setFormValue}
+        />} />
         <Route exact path="/war" element={<War
           formValue={formValue}
           game={game}
         />} />
-
+        <Route exact path="/game-over" element={<GameOver
+          formValue={formValue}
+          game={game}
+        />} />
       </Routes>
     </BrowserRouter>
   );

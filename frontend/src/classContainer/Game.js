@@ -32,59 +32,59 @@ export class Game {
     startGame() {
         this.shuffle()
         this.deal()
+
     }
     playTopCard() {
-        this.user.removeTopCard();
-        this.bot.removeTopCard();
-        this.tableCards.push(this.user.currentCard, this.bot.currentCard)
+        this.user.removeTopCards(1);
+        this.bot.removeTopCards(1);
+        this.tableCards.push(...this.user.currentCard, ...this.bot.currentCard)
         return null
     }
 
 
-    war() {
-        const userWarCardStack = this.user.removeTwoCards()
-        const botWarCardStack = this.bot.removeTwoCards()
-        console.log("WAR", userWarCardStack, botWarCardStack);
-        if (!(userWarCardStack && botWarCardStack)) { // players have 2+ cards
-            this.tableCards.push(...userWarCardStack, ...botWarCardStack)
-            console.log("War table", this.tableCards);
+    war(pointer) {
+        const userWarCardStack = this.user.removeTopCards(2)
+        const botWarCardStack = this.bot.removeTopCards(2)
+
+        if (!(userWarCardStack && botWarCardStack === null)) {// enough cards to play with war
+            this.tableCards = [...userWarCardStack, ...botWarCardStack]
+
             if (userWarCardStack.at(-1).value > botWarCardStack.at(-1).value) {
                 this.user.hand.push(...this.tableCards)
                 this.status = "User Won"
-            } else if (botWarCardStack.at(-1).value > userWarCardStack.at(-1).value) {
+            } else if (userWarCardStack.at(-1).value < botWarCardStack.at(-1).value) {
                 this.bot.hand.push(...this.tableCards)
                 this.status = "Bot Won"
             } else {
-                this.war()
+                return this.war(pointer += 2)
             }
-
-        }
-        else { // one of the players doesn't have enough cards for war
+        } else {// there is no enough cards to continue.
             this.status = "Over"
         }
+        return null
+
     }
     compareCards() {
-        if (this.user.currentCard.value > this.bot.currentCard.value) {
-            for (let i of this.tableCards) {
-                this.user.hand.push(i)
-                this.status = "User Won"
-
-            }
-        } else if (this.user.currentCard.value < this.bot.currentCard.value) {
-            for (let i of this.tableCards) {
-                this.bot.hand.push(i)
-                this.status = "Bot Won"
-            }
+        if (this.user.hand.length === 0 || this.bot.hand.length === 0) {
+            this.status = "Over"
+        } else if (this.user.currentCard.at(-1).value > this.bot.currentCard.at(-1).value) {
+            this.user.hand.push(...this.tableCards)
+            this.status = "User Won";
+        } else if (this.user.currentCard.at(-1).value < this.bot.currentCard.at(-1).value) {
+            this.bot.hand.push(...this.tableCards);
+            this.status = "Bot Won";
         } else {
-            this.war()
             this.status = "War"
-
+            this.war(0)
+            return
         }
         return null
     }
 
     clearTable() {
         this.tableCards = []
+        this.user.currentCard = []
+        this.bot.currentCard = []
         return null
     }
 }
@@ -92,8 +92,12 @@ export class Game {
 class Deck {
     constructor() {
         this.cards = [];
-        const suits = ["Hearts", "Spades", "Diamonds"];
-        const values = [2, 3, 4, 5];
+        const suits = ["Hearts",
+            // "Spades",
+            // "Diamonds",
+            // "Clubs"
+        ];
+        const values = [2, 3, 3, 3, 7, 8];
         for (let suit of suits) {
             for (let value of values) {
                 this.cards.push(
@@ -125,21 +129,32 @@ class Player {
         this.hand = [];
         this.username = username;
         this.score = 0;
-        this.warCardStack = []
-        this.currentCard = undefined;
+        this.currentCard = [];
+        this.wonOrLost = "default"
     }
 
-    removeTopCard() {
-        this.currentCard = this.hand.shift()
-    }
-
-    removeTwoCards() {
-        if (this.hand.length < 2) return null
-        else {
-            this.warCardStack = this.hand.splice(0, 2);
-            return this.warCardStack
+    removeTopCards(howManyCards) {
+        if (howManyCards === 1) {
+            //check if zero cards left first
+            //return game over
+            if (this.hand.length < 1) {
+                this.wonOrLost = "false"
+                return null;
+            } else {
+                this.currentCard.push(this.hand.shift());
+            }
         }
+        if (howManyCards === 2) {
+            if (this.hand.length < 2) {
+                return null;
+            } else {
+                this.currentCard.push(...this.hand.splice(0, 2));
+            }
+        }
+        return this.currentCard
+
 
     }
+
 
 }

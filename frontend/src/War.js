@@ -1,6 +1,11 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+
+import { GameOver } from "./GameOver"
 
 export function War({ formValue, game }) {
+
+    let navigate = useNavigate();
     game.user.username = formValue
     const [showWelcome, setWelcome] = useState(true)
     const [showDeal, setDeal] = useState(false)
@@ -8,8 +13,8 @@ export function War({ formValue, game }) {
     const [botHand, setBotHand] = useState([])
     const [message, setMessage] = useState("")// each battle winner
     const [tableCards, setTableCards] = useState([...game.tableCards])
-
-    const [timeToPlay, setTimeToPlay] = useState(true)
+    const [endGame, setEndGame] = useState(false)
+    const [timeToPlay, setTimeToPlay] = useState(true)//toggle play and clear button
 
     function handleStartButton() {
         game.startGame();
@@ -24,7 +29,10 @@ export function War({ formValue, game }) {
         setTableCards([])
         if (game.status != "Over") {
             setTimeToPlay(true)
+        } else {
+            setEndGame(true)
         }
+
     }
 
     function handlePlay() {
@@ -40,102 +48,108 @@ export function War({ formValue, game }) {
         } else if (game.status === "War") {
             setMessage("It is war")
         } else if (game.status === "Over") {
-            setMessage("Game Over")
+            setEndGame(true)
         }
         setTimeToPlay(false)
     }
 
+    console.log(game.user.won)
     return (
         < >
-            {/* ############################## */}
-            {/*         welcome section        */}
-            {/* ############################## */}
-            {(showWelcome) ?
-                <div>
-                    <h3>Hi {formValue}, Welcome to War_app, click start to start the game</h3>
-                    <button onClick={handleStartButton}> Start </button>
-                </div>
-                : null}
-
-            <p style={{ "color": 'green', "fontSize": "48px" }}>{message}</p>
-
-
-
-            {/* ############################## */}
-            {/*           user section         */}
-            {/* ############################## */}
-
-            {(showDeal) ?
-                <div className='user-hand'>
-                    <h2>Player: {formValue}'s card</h2>
-                    {userHand?.map((card, index) => {
-                        return (<div key={index}
-                            style={{
-                                "margin": "4px",
-                                "background": "#FAEBD7",
-                                "width": "70px",
-                                "height": "70px",
-                                "display": "inline-block"
-                            }}>
-                            <p>{card.face}</p>
+            {!endGame
+                ? <div className='AllowPlay'>
+                    {/* ############################## */}
+                    {/*         welcome section        */}
+                    {/* ############################## */}
+                    {(showWelcome) ?
+                        <div>
+                            <h3>Hi {formValue}, Welcome to War_app, click start to start the game</h3>
+                            <button onClick={handleStartButton}> Start </button>
                         </div>
-                        )
-                    })}
-                </div>
-                : null}
+                        : null}
+
+                    <p style={{ "color": 'green', "fontSize": "48px" }}>{message}</p>
 
 
-            {/* ################################################################*/}
-            {/* #   divider, above are user's card, below are bot's card       #*/}
-            {/* ################################################################*/}
-            <div style={{ "margin": "20px" }}>
-                {timeToPlay
-                    ? <button onClick={handlePlay}>Play</button>
-                    : <button onClick={clearTable}>Clear</button>
-                }
-            </div>
 
-            {/* display instructions */}
-            <div>
-                {tableCards?.map((card, index) => {
-                    return (<div key={index}
-                        style={{
-                            "margin": "4px",
-                            "background": "#E0FFFF",
-                            "width": "70px",
-                            "height": "70px",
-                            "display": "inline-block"
-                        }}
-                    >
-                        <p> {card.face}</p>
-                    </div>)
-                })}
+                    {/* ############################## */}
+                    {/*           user section         */}
+                    {/* ############################## */}
 
-            </div>
-
-
-            {/* ###################*/}
-            {/* #  bot section    #*/}
-            {/* ###################*/}
-
-            {(showDeal) ?
-                <div className='bot-hand'>
-                    <h2>Player: Bot's card</h2>
-                    {botHand?.map((card, index) => {
-                        return (<div key={index}
-                            style={{
-                                "margin": "4px",
-                                "background": "#FAEBD7",
-                                "width": "70px",
-                                "height": "70px",
-                                "display": "inline-block"
-                            }}>
-                            <p>{card.face}</p>
+                    {(showDeal) ?
+                        <div className='user-hand'>
+                            <h2>Player: {formValue}'s card</h2>
+                            {userHand?.map((card, index) => {
+                                return (<div key={index}
+                                    style={{
+                                        "margin": "4px",
+                                        "background": "#FAEBD7",
+                                        "width": "70px",
+                                        "height": "70px",
+                                        "display": "inline-block"
+                                    }}>
+                                    <p>{card.face}</p>
+                                </div>
+                                )
+                            })}
                         </div>
-                        )
-                    })}
+                        : null}
+
+
+                    {/* ################################################################*/}
+                    {/* #   divider, above are user's card, below are bot's card       #*/}
+                    {/* ################################################################*/}
+                    <div style={{ "margin": "20px" }}>
+                        {timeToPlay
+                            ? <button onClick={handlePlay}>Play</button>
+                            : <button onClick={clearTable}>Clear</button>
+                        }
+                    </div>
+
+                    {/* display instructions */}
+                    <div>
+                        {tableCards?.map((card, index) => {
+                            return (<div key={index}
+                                style={{
+                                    "margin": "4px",
+                                    "background": "#E0FFFF",
+                                    "width": "70px",
+                                    "height": "70px",
+                                    "display": "inline-block"
+                                }}
+                            >
+                                <p> {card.face}</p>
+                            </div>)
+                        })}
+
+                    </div>
+
+
+                    {/* ###################*/}
+                    {/* #  bot section    #*/}
+                    {/* ###################*/}
+
+                    {(showDeal) ?
+                        <div className='bot-hand'>
+                            <h2>Player: Bot's card</h2>
+                            {botHand?.map((card, index) => {
+                                return (<div key={index}
+                                    style={{
+                                        "margin": "4px",
+                                        "background": "#FAEBD7",
+                                        "width": "70px",
+                                        "height": "70px",
+                                        "display": "inline-block"
+                                    }}>
+                                    <p>{card.face}</p>
+                                </div>
+                                )
+                            })}
+                        </div>
+                        : null}
                 </div>
-                : null}
+                : <GameOver formValue={formValue} game={game} />
+            }
         </>
     )
 
