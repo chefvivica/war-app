@@ -6,10 +6,12 @@ import {
 } from "react-router-dom";
 import { useState } from 'react';
 import Start from './Start';
-import War from './War';
+import { War } from './War';
+import { Game } from './classContainer/Game';
 
 
 function App() {
+  const game = new Game()
 
   const [formValue, setFormValue] = useState('');
 
@@ -17,8 +19,12 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route exact path="/" element={<Start formValue={formValue} setFormValue={setFormValue} />}/>
-        <Route exact path="/war" element={<War formValue={formValue} />}/>
+        <Route exact path="/" element={<Start formValue={formValue} setFormValue={setFormValue} />} />
+        <Route exact path="/war" element={<War
+          formValue={formValue}
+          game={game}
+        />} />
+
       </Routes>
     </BrowserRouter>
   );
