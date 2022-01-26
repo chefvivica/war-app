@@ -1,12 +1,11 @@
 export class Game {
-    constructor() {
+    constructor(name) {
         this.deck = new Deck();
         this.bot = new Player("bot");
-        this.user = new Player("user");  //user is you as a player, a player instance
+        this.user = new Player(name);  //user is you as a player, a player instance
         this.tableCards = [];
         this.status = "";
     }
-    // method to shuffle the 52 cards at the begining of the game
     shuffle() {
         let len = this.deck.cards.length;
         let i;
@@ -17,7 +16,6 @@ export class Game {
         }
         return null
     }
-    // method to deal the deck into two player, each one has 26 cards
     deal() {
         const len = this.deck.cards.length
         const mid = Math.floor(len / 2);
@@ -32,7 +30,7 @@ export class Game {
     startGame() {
         this.shuffle()
         this.deal()
-
+        this.user.username ? this.user.username = this.user.username : this.user.username = "Generic User"
     }
     playTopCard() {
         this.user.removeTopCards(1);
@@ -40,8 +38,6 @@ export class Game {
         this.tableCards.push(...this.user.currentCard, ...this.bot.currentCard)
         return null
     }
-
-
     war(pointer) {
         const userWarCardStack = this.user.removeTopCards(2)
         const botWarCardStack = this.bot.removeTopCards(2)
@@ -80,7 +76,6 @@ export class Game {
         }
         return null
     }
-
     clearTable() {
         this.tableCards = []
         this.user.currentCard = []
@@ -92,12 +87,13 @@ export class Game {
 class Deck {
     constructor() {
         this.cards = [];
-        const suits = ["Hearts",
-            // "Spades",
-            // "Diamonds",
-            // "Clubs"
+        const suits = [
+            "Hearts",
+            "Spades",
+            "Diamonds",
+            "Clubs"
         ];
-        const values = [2, 3, 3, 3, 7, 8];
+        const values = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14];
         for (let suit of suits) {
             for (let value of values) {
                 this.cards.push(
@@ -128,17 +124,16 @@ class Player {
     constructor(username) {
         this.hand = [];
         this.username = username;
-        this.score = 0;
+        this.score = 1;
         this.currentCard = [];
-        this.wonOrLost = "default"
+        this.message = ""
     }
 
     removeTopCards(howManyCards) {
         if (howManyCards === 1) {
-            //check if zero cards left first
-            //return game over
             if (this.hand.length < 1) {
-                this.wonOrLost = "false"
+                this.score = 0;
+                this.message = `${this.username} ran out of cards`
                 return null;
             } else {
                 this.currentCard.push(this.hand.shift());
@@ -146,6 +141,8 @@ class Player {
         }
         if (howManyCards === 2) {
             if (this.hand.length < 2) {
+                this.score = 0;
+                this.message = `${this.username} ran out of cards`
                 return null;
             } else {
                 this.currentCard.push(...this.hand.splice(0, 2));

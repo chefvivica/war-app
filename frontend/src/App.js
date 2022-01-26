@@ -12,10 +12,10 @@ import { Game } from './classContainer/Game';
 
 
 function App() {
-  const game = new Game()
+
 
   const [formValue, setFormValue] = useState('');
-
+  const game = new Game(formValue)
 
   return (
     <BrowserRouter>
