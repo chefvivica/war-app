@@ -33,7 +33,6 @@ function Start({ formValue, setFormValue }) {
             Name:
             <input type="text"
               name="name"
-              // onChange={(e) => setFormValue(e.target.value)}
               onChange={e => setFormValue(e.target.value)}
               value={formValue} />
           </label>

@@ -1,8 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-
 import { GameOver } from "./GameOver"
-
 export function War({ formValue, game }) {
 
     let navigate = useNavigate();
@@ -22,6 +20,7 @@ export function War({ formValue, game }) {
         setDeal(true)
         setBotHand(game.bot.hand)
         setUserHand(game.user.hand)
+
     }
 
     function clearTable() {
@@ -99,13 +98,16 @@ export function War({ formValue, game }) {
                     {/* ################################################################*/}
                     {/* #   divider, above are user's card, below are bot's card       #*/}
                     {/* ################################################################*/}
-                    <div style={{ "margin": "20px" }}>
-                        {timeToPlay
-                            ? <button onClick={handlePlay}>Play</button>
-                            : <button onClick={clearTable}>Clear</button>
-                        }
-                    </div>
 
+
+                    {!(showWelcome) ?
+                        <div style={{ "margin": "20px" }}>
+                            {timeToPlay
+                                ? <button onClick={handlePlay}>Play</button>
+                                : <button onClick={clearTable}>Clear</button>
+                            }
+                        </div>
+                        : null}
                     {/* display instructions */}
                     <div>
                         {tableCards?.map((card, index) => {
