@@ -2,9 +2,7 @@ const express = require('express')
 const { User } = require('./db/models')
 const app = express()
 const asyncHandler = require('express-async-handler')
-let user = require('./db/models/user')
 const cors = require("cors")
-
 app.use(cors({}))
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -25,10 +23,9 @@ app.post('/user', asyncHandler(async (req, res, next) => {
     let { username } = req.body
     let winCount = 0
     let lostCount = 0
-    user = User.create({ username, winCount, lostCount })
-
+    let user = User.create({ username, winCount, lostCount })
+    return res.json(user)
   } catch (error) {
-    console.log(error);
     next(error)
   }
 
@@ -37,32 +34,46 @@ app.post('/user', asyncHandler(async (req, res, next) => {
 //get user by username
 app.get('/users/:username', asyncHandler(async (req, res, next) => {
   try {
-    username = req.params.username
+    const username = req.params.username
     const user = await User.findOne({
       where: { username }
     })
     return res.json(user)
   } catch (error) {
-    console.log(error);
     next(error)
   }
 }))
 
-
-app.put('/users/:username', asyncHandler(async (req, res, next) => {
+//when user won, winCount increase by 1 point
+app.get('/users/:username/winIncrease', asyncHandler(async (req, res, next) => {
   try {
-    username = req.params.username
-    winCount = req.body.winCount
-    lostCount = req.body.lostCount
-    let user = await User.findOne({
+    const username = req.params.username
+    const user = await User.findOne({
       where: { username }
     })
-    user.update({ username: username, winCount: winCount, lostCount: lostCount })
+    const incrementResult = await user.increment('winCount')
+    return res.json(incrementResult)
   } catch (error) {
-    console.log(error);
     next(error)
   }
 }))
+
+
+//when user lost, lostCount increase by 1 point
+app.get('/users/:username/lostIncrease', asyncHandler(async (req, res, next) => {
+  try {
+    const username = req.params.username
+    const user = await User.findOne({
+      where: { username }
+    })
+    const incrementResult = await user.increment('lostCount')
+    return res.json(incrementResult)
+  } catch (error) {
+    next(error)
+  }
+}))
+
+
 
 
 app.post('/users', asyncHandler(async (req, res) => {

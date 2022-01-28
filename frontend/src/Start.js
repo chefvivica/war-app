@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 function Start({ formValue, setFormValue }) {
 
   let navigate = useNavigate();
-  const [allUsers, setUsers] = useState([]);
+
 
 
   const handleClick = (e) => {
@@ -33,7 +33,6 @@ function Start({ formValue, setFormValue }) {
             Name:
             <input type="text"
               name="name"
-              // onChange={(e) => setFormValue(e.target.value)}
               onChange={e => setFormValue(e.target.value)}
               value={formValue} />
           </label>

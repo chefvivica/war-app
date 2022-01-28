@@ -1,31 +1,10 @@
-import { useEffect, useState } from 'react';
-
-export function GameOver({ formValue, game }) {
-    const increasor = undefined;
-
-
-    useEffect(
-        () => {
-            if (game.user.score == 1) {
-
-            }
-            fetch(`http://localhost:8080/users/${formValue}`, {
-                method: "PUT",
-                headers: {
-                    'Content-Type': 'application/json',
-                    Accept: 'application/json'
-                },
-                body: JSON.stringify({ "username": formValue, "winCount": 0, "lostCount": 1 })
-            })
-        }
-        , [game.user.score]
-    )
-
+import { useNavigate } from 'react-router-dom';
+export function GameOver({ game }) {
+    let nevigate = useNavigate()
 
     const handleScore = (e) => {
-        console.log("clicked")
+        nevigate('/dashboard')
     }
-
 
     return (
         <div className="GameOver">

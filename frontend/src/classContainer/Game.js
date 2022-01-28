@@ -52,7 +52,7 @@ export class Game {
                 this.bot.hand.push(...this.tableCards)
                 this.status = "Bot Won"
             } else {
-                return this.war(pointer += 2)
+                return this.war(pointer += 2)//war again
             }
         } else {// there is no enough cards to continue.
             this.status = "Over"
@@ -61,8 +61,12 @@ export class Game {
 
     }
     compareCards() {
-        if (this.user.hand.length === 0 || this.bot.hand.length === 0) {
+        if (this.user.hand.length === 0) {
             this.status = "Over"
+            this.user.score = 0
+        } else if (this.bot.hand.length === 0) {
+            this.status = "Over"
+            this.bot.score = 0
         } else if (this.user.currentCard.at(-1).value > this.bot.currentCard.at(-1).value) {
             this.user.hand.push(...this.tableCards)
             this.status = "User Won";

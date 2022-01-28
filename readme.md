@@ -8,6 +8,7 @@
 -   grant all privileges on database war_app to war;
 
 4. run migrations -  npx sequelize db:migrate
+5. (optional) run seed - npx sequelize db:seed:all
 
 5. run npm start in each of the frontend and backend folders
 
