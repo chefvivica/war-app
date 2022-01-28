@@ -1,9 +1,8 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { GameOver } from "./GameOver"
 export function War({ formValue, game }) {
 
-    let navigate = useNavigate();
+
     game.user.username = formValue
     const [showWelcome, setWelcome] = useState(true)
     const [showDeal, setDeal] = useState(false)
@@ -23,10 +22,11 @@ export function War({ formValue, game }) {
 
     }
 
+    //after each round clear the table
     function clearTable() {
         game.clearTable()
         setTableCards([])
-        if (game.status != "Over") {
+        if (game.status !== "Over") {
             setTimeToPlay(true)
         } else {
             setEndGame(true)
@@ -34,6 +34,7 @@ export function War({ formValue, game }) {
 
     }
 
+    //main function for game
     function handlePlay() {
         game.playTopCard()
         game.compareCards()
@@ -48,11 +49,17 @@ export function War({ formValue, game }) {
             setMessage("It is war")
         } else if (game.status === "Over") {
             setEndGame(true)
+            if (game.user.score === 1) {
+                fetch(`http://localhost:8080/users/${formValue}/winIncrease`)
+
+            } else if (game.user.score === 0) {
+                fetch(`http://localhost:8080/users/${formValue}/lostIncrease`)
+
+            }
         }
         setTimeToPlay(false)
     }
 
-    console.log(game.user.won)
     return (
         < >
             {!endGame
@@ -67,7 +74,12 @@ export function War({ formValue, game }) {
                         </div>
                         : null}
 
-                    <p style={{ "color": 'green', "fontSize": "48px" }}>{message}</p>
+                    <p style={{
+                        "color": '#00004d',
+                        "fontSize": "48px",
+                        "width": "200px"
+                    }}>
+                        {message}</p>
 
 
 
@@ -82,7 +94,7 @@ export function War({ formValue, game }) {
                                 return (<div key={index}
                                     style={{
                                         "margin": "4px",
-                                        "background": "#FAEBD7",
+                                        "background": " #e7e7e7",
                                         "width": "70px",
                                         "height": "70px",
                                         "display": "inline-block"
@@ -103,8 +115,8 @@ export function War({ formValue, game }) {
                     {!(showWelcome) ?
                         <div style={{ "margin": "20px" }}>
                             {timeToPlay
-                                ? <button onClick={handlePlay}>Play</button>
-                                : <button onClick={clearTable}>Clear</button>
+                                ? <button onClick={handlePlay}>Play</button>// click to countiue to play next round
+                                : <button onClick={clearTable}>Clear</button>// click clear table
                             }
                         </div>
                         : null}
@@ -138,7 +150,7 @@ export function War({ formValue, game }) {
                                 return (<div key={index}
                                     style={{
                                         "margin": "4px",
-                                        "background": "#FAEBD7",
+                                        "background": "#e7e7e7",
                                         "width": "70px",
                                         "height": "70px",
                                         "display": "inline-block"

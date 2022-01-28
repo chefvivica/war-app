@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 function Start({ formValue, setFormValue }) {
 
   let navigate = useNavigate();
-  const [allUsers, setUsers] = useState([]);
+
 
 
   const handleClick = (e) => {

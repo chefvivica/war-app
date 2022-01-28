@@ -7,13 +7,11 @@ import {
 import { useState } from 'react';
 import Start from './Start';
 import { War } from './War';
-import { GameOver } from './GameOver';
+import { DashBoard } from './DashBoard';
 import { Game } from './classContainer/Game';
 
 
 function App() {
-
-
   const [formValue, setFormValue] = useState('');
   const game = new Game(formValue)
 
@@ -28,7 +26,7 @@ function App() {
           formValue={formValue}
           game={game}
         />} />
-        <Route exact path="/game-over" element={<GameOver
+        <Route exact path="/dashboard" element={<DashBoard
           formValue={formValue}
           game={game}
         />} />

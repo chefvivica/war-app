@@ -14,15 +14,15 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   User.init({
-    username:{
+    username: {
       type: DataTypes.STRING(100),
-      allowNull: false
+      allowNull: false,
     },
     winCount: {
-     type: DataTypes.INTEGER,
-     allowNull: false
+      type: DataTypes.INTEGER,
+      allowNull: false
     },
-    lostCount:{
+    lostCount: {
       type: DataTypes.INTEGER,
       allowNull: false
     }
